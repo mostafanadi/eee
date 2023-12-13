@@ -25,12 +25,11 @@ build:
 
 
     
-deploy-dockerfile-production:
+deploy:
   stage: deploy
   tags:
     - deploy
   script:
-    - scp -o strictHostKeyChecking=no ./docker-compose.yml  admin@172.16.170.88:/home/admin
     - export IMAGE=$IMAGE 
     - export DC_APP_PORT=3000
     - docker-compose pull   
