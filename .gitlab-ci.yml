@@ -1,0 +1,41 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  PROJECT_NAME : sama-challenge
+  IMAGE: hub.docker.com/repository/docker/mostafanadi/sama:$$CI_COMMIT_REF_NAME
+
+cache:
+  paths:
+    - node_modules/ 
+
+build:
+  stage: build
+  tags:
+    - build
+  script:
+    - cp .env.development .env.local
+    - export ENV= $CI_COMMIT_REF_NAME
+    - docker build --pull -t $IMAGE .
+    - docker push $IMAGE
+    - docker images -f "dangling=true" -q | xargs docker rmi || true 
+  only:
+    - main
+
+
+    
+deploy-dockerfile-production:
+  stage: deploy
+  tags:
+    - deploy
+  script:
+    - scp -o strictHostKeyChecking=no ./docker-compose.yml  admin@172.16.170.88:/home/admin
+    - export IMAGE=$IMAGE 
+    - export DC_APP_PORT=3000
+    - docker-compose pull   
+    - docker-compose up -d 
+    
+  only:
+    - main
+    

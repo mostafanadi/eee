@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  sama-frontend-challenge: 
+    hostname: sama-challenge
+    restart: always
+    image: ${IMAGE}
+    ports:
+      -  0.0.0.0:${DC_APP_PORT}:80
+    networks: 
+      - sama
+   
+networks:
+  sama :
+    driver: bridge
