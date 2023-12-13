@@ -1,0 +1,15 @@
+.myInput input  {
+    outline: none;
+    padding: 0.3rem;
+}
+.myInput :first-child  {
+    margin-bottom: 8px !important;
+}
+.errorInput {
+    border-color: red !important;
+   
+}
+.error  {
+    color: red !important;
+   
+}
