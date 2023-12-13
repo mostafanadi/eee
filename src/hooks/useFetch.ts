@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-interface UseFetchProps<T> {
+interface UseFetchProps {
   url: string;
   options?: RequestInit;
 }
@@ -14,11 +14,10 @@ interface UseFetchResult<T> {
 export const useFetch = <T>({
   url,
   options,
-}: UseFetchProps<T>): UseFetchResult<T> => {
+}: UseFetchProps): UseFetchResult<T> => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,8 +35,12 @@ export const useFetch = <T>({
         setLoading(false);
       }
     };
+    if (!url.includes('undefined') && !url.includes('null')) { 
 
-    fetchData();
+      fetchData();
+    }
+
+
   }, [url, options]);
 
   return { data, loading, error };

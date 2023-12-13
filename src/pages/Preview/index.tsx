@@ -5,6 +5,7 @@ import { Button, Form } from 'antd';
 import { toast } from 'react-toastify';
 import { errorContext, initialErrorData } from '../../store/ErrorProvider';
 import { userContext } from '../../store/StoreProvider';
+import { useMutation } from '../../hooks/useMutation';
 
 const Preview = () => {
     const { userInfo } = useContext(userContext);
@@ -16,20 +17,18 @@ const Preview = () => {
             navigate('/info')
         }
     }, [userInfo])
-
-    const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const city = userInfo?.city ? JSON.parse?.(userInfo?.city).id : ""
-        const province = userInfo?.province ? JSON?.parse?.(userInfo?.province).id : ""
-        const data = await (await fetch('/api/submit', {
-            method: 'POST',
-            body: JSON?.stringify({ ...userInfo, city, province }),
+    const submit = useMutation<{ status: string; detail: string }>({
+        url: '/api/submit',
+        options: {
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             }
-        })).json()
-        if (data.status === 'failed') {
-            const error = data;
+        }
+    })
+
+
+    if (submit?.data?.status === 'failed') {
+        const error: any = submit?.data;
             updateErrorData(error)
             if (error.detail === 'info') {
 
@@ -42,11 +41,26 @@ const Preview = () => {
             if (error.detail === 'bank') {
                 navigate(`/bank?type=${userInfo.type}`)
             }
-
-        } else {
+    } else if (submit?.data?.detail) {
             toast.success('فرم با موفقیت ذخیره شد')
             updateErrorData(initialErrorData)
-        }
+    } 
+
+
+
+    const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        submit.postData(JSON.stringify({
+            ...userInfo,
+            city: userInfo?.city ? JSON.parse?.(userInfo?.city).id : "",
+            province: userInfo?.province ? JSON?.parse?.(userInfo?.province).id : ""
+        }))
+    // setReqBody(JSON.stringify({
+    //     ...userInfo,
+    //     city: userInfo?.city ? JSON.parse?.(userInfo?.city).id : "",
+    //     province: userInfo?.province ? JSON?.parse?.(userInfo?.province).id : ""
+    // }))
+
 
 
 

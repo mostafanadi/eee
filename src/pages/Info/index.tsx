@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from 'react'
-import MyInput from '../../components/MyInput'
+import { useContext, useEffect } from 'react'
 import { userContext } from '../../store/StoreProvider'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { errorContext } from '../../store/ErrorProvider'
-import { Button, Form, Input, Radio } from 'antd'
+import { Radio } from 'antd'
 import LegalInfo from '../../components/LegalInfo'
 import PersonalInfo from '../../components/PesonalInfo'
 

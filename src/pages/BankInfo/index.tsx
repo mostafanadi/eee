@@ -8,7 +8,6 @@ import { Button, Form } from 'antd';
 const BankInfo = () => {
     const { userInfo, updateUserInfo } = useContext(userContext)
     const { errorData } = useContext(errorContext);
-    const [ibanError, setIbanError] = useState('')
 
     const navigate = useNavigate()
 

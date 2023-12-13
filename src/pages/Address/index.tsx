@@ -5,44 +5,33 @@ import { Button, Form, Select } from 'antd';
 import { userContext } from '../../store/StoreProvider';
 import { TCity, TProvince } from '../../../types';
 import { errorContext } from '../../store/ErrorProvider';
+import { useFetch } from '../../hooks/useFetch';
 
 const Address = () => {
   const { userInfo, updateUserInfo } = useContext(userContext);
   const { errorData } = useContext(errorContext);
-  const [provinces, setProvinces] = useState<TProvince[]>([])
-  const [cities, setCities] = useState<TCity[]>([])
+  const [provinceId, setProvinceId] = useState<number | null>(null)
   const navigate = useNavigate()
-  const fetchCities = async (id: number) => {
-    try {
-      const data = await fetch(`/api/cities/${id}`)
-      const jsonData = await data.json()
-      setCities(jsonData.results)
-      return jsonData
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
-  const fetchProvincesAndCities = async () => {
-    try {
-      const fetchedProvinces = await ((await fetch('/api/provinces')).json())
-      setProvinces(fetchedProvinces.results)
-      await fetchCities(fetchedProvinces.results[0].id)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const fetchedProvinces = useFetch<{ results: TProvince[] }>({
+    url: '/api/provinces'
+  })
 
-  useEffect(() => {
-    fetchProvincesAndCities()
-  }, [])
+  const FetchedCities = (id: number) => {
+    return useFetch<{ results: TCity[] }>({
+      url: `/api/cities/${id}`
+    })
+  }
+  const cities = FetchedCities(provinceId as number)
+
+
+
+
   useEffect(() => {
     if (!userInfo?.type) {
       navigate('/info')
     }
   }, [userInfo])
-
-
 
   const doesCityHaveError = () => {
     return errorData?.extra?.[0].field === 'city' && !!!userInfo.city
@@ -61,7 +50,7 @@ const Address = () => {
           className='w-100'
           status={doesProvinceHaveError() ? 'error' : undefined}
           placeholder='لطفا انتخاب کنید'
-          options={provinces?.map((item) => {
+          options={fetchedProvinces.data?.results?.map((item) => {
             return (
               {
                 value: JSON.stringify(item),
@@ -71,8 +60,9 @@ const Address = () => {
           })}
 
           onChange={async province => {
-            updateUserInfo({ ...userInfo, province })
-            await fetchCities(JSON.parse(province).id)
+            updateUserInfo({ ...userInfo, province, city: "" })
+            setProvinceId(JSON.parse(province).id)
+            // await fetchCities(JSON.parse(province).id)
           }} >
 
 
@@ -89,7 +79,7 @@ const Address = () => {
           className='w-100'
 
           onChange={city => updateUserInfo({ ...userInfo, city })}
-          options={cities?.map((item) => {
+          options={cities.data?.results?.map((item) => {
             return (
               {
                 value: JSON.stringify(item),

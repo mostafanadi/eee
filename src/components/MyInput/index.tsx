@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useEffect } from 'react'
+import React, { InputHTMLAttributes } from 'react'
 import classes from './style.module.css'
 import { Form, Input, InputProps } from 'antd'
 import { IError } from '../../../types'
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const MyInput = ({ title, inputProps, errorData, fieldName, mandatory }: Props) => {
-    const hasError = ((errorData?.extra?.[0].field === fieldName))
+    const hasError = ((errorData?.extra?.[0].field === fieldName && !!!inputProps.value))
 
     return (
         < >

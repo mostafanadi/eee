@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import MyInput from '../../components/MyInput'
 import { userContext } from '../../store/StoreProvider'
 import { useNavigate } from 'react-router-dom'

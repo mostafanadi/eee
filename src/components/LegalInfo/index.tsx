@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import MyInput from '../../components/MyInput'
 import { userContext } from '../../store/StoreProvider'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { errorContext } from '../../store/ErrorProvider'
-import { Button, Form, Input, Radio } from 'antd'
+import { Button, Form } from 'antd'
 
 const LegalInfo = () => {
   const { userInfo, updateUserInfo } = useContext(userContext);
   const { errorData } = useContext(errorContext);
-  const [searchParams] = useSearchParams();
-  const type = searchParams.get('type');
-  const [telError, setTelError] = useState('')
   const navigate = useNavigate()
   const goToAddress = (e: React.FormEvent<HTMLFormElement>) => {
 
